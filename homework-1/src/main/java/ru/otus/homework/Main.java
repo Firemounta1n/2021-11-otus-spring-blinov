@@ -15,8 +15,7 @@ public class Main {
 
         QuestionService questionService = context.getBean(QuestionService.class);
 
-        List<Question> questions = questionService.getAllQuestions();
-        questions.forEach(question -> log.info("Question №" + question.getId() + ": " + question.getText()));
+        questionService.printAllQuestions();
 
         context.close();
     }

@@ -4,12 +4,24 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="questionDao" class="ru.otus.homework.dao.QuestionDaoSimple">
+    <bean id="csvResourceLoader" class="ru.otus.homework.dao.loader.CsvResourceLoaderImpl">
         <constructor-arg name="path" value="questions.csv"/>
     </bean>
 
-    <bean id="questionServiceImpl" class="ru.otus.homework.service.QuestionServiceImpl">
-        <constructor-arg name="dao" ref="questionDao"/>
+    <bean id="csvResourceReader" class="ru.otus.homework.dao.reader.CsvResourceReaderImpl">
+        <constructor-arg name="loader" ref="csvResourceLoader"/>
+    </bean>
+
+    <bean id="csvInputStreamTransformer" class="ru.otus.homework.dao.transformer.CsvInputStreamTransformerImpl">
+        <constructor-arg name="reader" ref="csvResourceReader"/>
+    </bean>
+
+    <bean id="questionsDao" class="ru.otus.homework.dao.QuestionsDaoImpl">
+        <constructor-arg name="transformer" ref="csvInputStreamTransformer"/>
+    </bean>
+
+    <bean id="questionService" class="ru.otus.homework.service.QuestionServiceImpl">
+        <constructor-arg name="dao" ref="questionsDao"/>
     </bean>
 
 </beans>
