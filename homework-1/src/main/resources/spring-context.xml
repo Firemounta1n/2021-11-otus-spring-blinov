@@ -8,7 +8,7 @@
         <constructor-arg name="path" value="questions.csv"/>
     </bean>
 
-    <bean id="csvResourceReader" class="ru.otus.homework.dao.reader.CsvResourceReaderImpl">
+    <bean id="csvResourceReader" class="ru.otus.homework.dao.reader.CsvInputStreamReaderImpl">
         <constructor-arg name="loader" ref="csvResourceLoader"/>
     </bean>
 
