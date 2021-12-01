@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class CsvResourceReaderImpl implements CsvResourceReader {
+public class CsvInputStreamReaderImpl implements CsvInputStreamReader {
 
     private final CsvResourceLoader loader;
 
-    public CsvResourceReaderImpl(CsvResourceLoader loader) {
+    public CsvInputStreamReaderImpl(CsvResourceLoader loader) {
         this.loader = loader;
     }
 

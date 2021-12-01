@@ -8,8 +8,8 @@ import ru.otus.homework.dao.QuestionsDao;
 import ru.otus.homework.dao.QuestionsDaoImpl;
 import ru.otus.homework.dao.loader.CsvResourceLoader;
 import ru.otus.homework.dao.loader.CsvResourceLoaderImpl;
-import ru.otus.homework.dao.reader.CsvResourceReader;
-import ru.otus.homework.dao.reader.CsvResourceReaderImpl;
+import ru.otus.homework.dao.reader.CsvInputStreamReader;
+import ru.otus.homework.dao.reader.CsvInputStreamReaderImpl;
 import ru.otus.homework.dao.transformer.CsvInputStreamTransformer;
 import ru.otus.homework.dao.transformer.CsvInputStreamTransformerImpl;
 
@@ -23,13 +23,13 @@ public class DaoConfig {
     }
 
     @Bean
-    public CsvResourceReader csvResourceReader(CsvResourceLoader csvResourceLoader) {
-        return new CsvResourceReaderImpl(csvResourceLoader);
+    public CsvInputStreamReader csvInputStreamReader(CsvResourceLoader csvResourceLoader) {
+        return new CsvInputStreamReaderImpl(csvResourceLoader);
     }
 
     @Bean
-    public CsvInputStreamTransformer csvInputStreamTransformer(CsvResourceReader csvResourceReader) {
-        return new CsvInputStreamTransformerImpl(csvResourceReader);
+    public CsvInputStreamTransformer csvInputStreamTransformer(CsvInputStreamReader csvInputStreamReader) {
+        return new CsvInputStreamTransformerImpl(csvInputStreamReader);
     }
 
     @Bean
