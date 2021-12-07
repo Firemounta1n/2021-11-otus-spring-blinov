@@ -2,7 +2,7 @@ package ru.otus.homework.dao.reader;
 
 import java.io.InputStreamReader;
 
-public interface CsvResourceReader {
+public interface CsvInputStreamReader {
 
     InputStreamReader getInputStreamReader();
 }

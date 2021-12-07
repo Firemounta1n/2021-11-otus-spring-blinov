@@ -7,7 +7,6 @@ import java.util.List;
 
 public class QuestionsDaoImpl implements QuestionsDao {
 
-
     private final CsvInputStreamTransformer transformer;
 
     public QuestionsDaoImpl(CsvInputStreamTransformer transformer) {

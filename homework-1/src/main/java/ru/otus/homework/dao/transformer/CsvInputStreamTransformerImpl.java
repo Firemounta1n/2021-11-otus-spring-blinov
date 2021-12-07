@@ -1,16 +1,16 @@
 package ru.otus.homework.dao.transformer;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import ru.otus.homework.dao.reader.CsvResourceReader;
+import ru.otus.homework.dao.reader.CsvInputStreamReader;
 import ru.otus.homework.domain.Question;
 
 import java.util.List;
 
 public class CsvInputStreamTransformerImpl implements CsvInputStreamTransformer {
 
-    private final CsvResourceReader reader;
+    private final CsvInputStreamReader reader;
 
-    public CsvInputStreamTransformerImpl(CsvResourceReader reader) {
+    public CsvInputStreamTransformerImpl(CsvInputStreamReader reader) {
         this.reader = reader;
     }
 
