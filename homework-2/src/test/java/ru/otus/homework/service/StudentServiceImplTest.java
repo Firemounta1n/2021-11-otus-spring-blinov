@@ -5,27 +5,28 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Scanner;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
 
-    @Mock
-    private Scanner scanner;
-
     private StudentServiceImpl studentService;
+
+    @Mock
+    private ScannerService scannerService;
 
     @BeforeEach
     void setUp() {
-        studentService = new StudentServiceImpl();
-        studentService.setScanner(scanner);
+        studentService = new StudentServiceImpl(scannerService);
     }
 
     @Test
     void getStudentTest() {
+        Mockito.when(scannerService.getScannerInNext()).thenReturn("text");
+
         studentService.createStudent();
+
         Assertions.assertNotNull(studentService.getStudent());
     }
 }

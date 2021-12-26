@@ -7,23 +7,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Scanner;
-
 @ExtendWith(MockitoExtension.class)
 class AnswerServiceImplTest {
 
-    @Mock
-    private Scanner scanner;
+    private AnswerServiceImpl answerService;
 
     @Mock
     private QuestionService questionService;
 
-    private AnswerServiceImpl answerService;
+    @Mock
+    private ScannerService scannerService;
 
     @BeforeEach
     void setUp() {
-        answerService = new AnswerServiceImpl(questionService);
-        answerService.setScanner(scanner);
+        answerService = new AnswerServiceImpl(questionService, scannerService);
     }
 
     @Test

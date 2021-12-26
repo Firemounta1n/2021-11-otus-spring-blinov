@@ -13,11 +13,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     private final QuestionService questionService;
 
-    private Scanner scanner = new Scanner(System.in);
-
-    public void setScanner(Scanner scanner) {
-        this.scanner = scanner;
-    }
+    private final ScannerService scannerService;
 
     @Override
     public Integer getCorrectAnswersCount() {
@@ -25,7 +21,7 @@ public class AnswerServiceImpl implements AnswerService {
         for (Question question : questionService.getAllQuestions()) {
             question.printQuestion();
             System.out.println("Your answer number is?");
-            if (Objects.equals(question.getCorrect(), getAnswer(scanner))) {
+            if (Objects.equals(question.getCorrect(), getAnswer(scannerService.getScannerIn()))) {
                 correctCounter++;
             }
         }

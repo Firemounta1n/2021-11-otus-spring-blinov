@@ -1,18 +1,18 @@
 package ru.otus.homework.dao.transformer;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.otus.homework.dao.reader.CsvInputStreamReader;
 import ru.otus.homework.domain.Question;
 
 import java.util.List;
 
+@Component
+@RequiredArgsConstructor
 public class CsvInputStreamTransformerImpl implements CsvInputStreamTransformer {
 
     private final CsvInputStreamReader reader;
-
-    public CsvInputStreamTransformerImpl(CsvInputStreamReader reader) {
-        this.reader = reader;
-    }
 
     @Override
     public List<Question> parseInputStreamToQuestions() {
