@@ -12,13 +12,16 @@ public class StudentServiceImpl implements StudentService {
 
     private final ScannerService scannerService;
 
+    private final MessageService messageService;
+
     @Override
     public void createStudent() {
-        System.out.print("Enter your lastname: ");
+        System.out.print(messageService.getMessage("student.lastname") + " ");
         String lastName = scannerService.getScannerInNext();
-        System.out.print("Enter your firstname: ");
+        System.out.print(messageService.getMessage("student.firstname") + " ");
         String firstName = scannerService.getScannerInNext();
-        System.out.println("Hello " + lastName + " " + firstName + ", answer the questions");
+        System.out.println(messageService.getMessage("student.greetings",
+                new String[] {lastName, firstName}));
         student = new Student(firstName, lastName);
     }
 

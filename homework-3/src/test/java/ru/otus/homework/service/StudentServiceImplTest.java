@@ -16,9 +16,12 @@ class StudentServiceImplTest {
     @Mock
     private ScannerService scannerService;
 
+    @Mock
+    private MessageService messageService;
+
     @BeforeEach
     void setUp() {
-        studentService = new StudentServiceImpl(scannerService);
+        studentService = new StudentServiceImpl(scannerService, messageService);
     }
 
     @Test

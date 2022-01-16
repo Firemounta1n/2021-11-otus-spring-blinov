@@ -13,16 +13,22 @@ import ru.otus.homework.domain.Student;
 class ExamServiceImplTest {
 
     @Mock
+    private LocaleService localeService;
+
+    @Mock
     private AnswerService answerService;
 
     @Mock
     private StudentService studentService;
 
+    @Mock
+    private MessageService messageService;
+
     private ExamService examService;
 
     @BeforeEach
     void setUp() {
-        examService = new ExamServiceImpl(studentService, answerService);
+        examService = new ExamServiceImpl(localeService, studentService, answerService, messageService);
 
         Student student = Student.builder()
                 .firstName("Ivan")

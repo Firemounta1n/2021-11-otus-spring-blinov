@@ -7,22 +7,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ExamServiceImpl implements ExamService {
 
+    private final LocaleService localeService;
+
     private final StudentService studentService;
 
     private final AnswerService answerService;
 
+    private final MessageService messageService;
+
     @Override
     public boolean makeExam() {
+        localeService.selectLocale();
         studentService.createStudent();
         if (answerService.getCorrectAnswersCount() > 3) {
-            System.out.println("Congratulations "
-                    + studentService.getStudent().getLastName() + " "
-                    + studentService.getStudent().getFirstName() + ", you passed the test.");
+            System.out.println(messageService.getMessage(
+                    "exam.complete.success",
+                    new String[]{
+                            studentService.getStudent().getLastName(),
+                            studentService.getStudent().getFirstName()}));
             return true;
         } else {
-            System.out.println("Sorry "
-                    + studentService.getStudent().getLastName() + " "
-                    + studentService.getStudent().getFirstName() + ", you didn't pass the test.");
+            System.out.println(messageService.getMessage(
+                    "exam.complete.fail",
+                    new String[]{
+                            studentService.getStudent().getLastName(),
+                            studentService.getStudent().getFirstName()}));
             return false;
         }
     }
