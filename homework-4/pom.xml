@@ -91,7 +91,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
                             <mainClass>
-                                ru.otus.homework.Homework3Application
+                                ru.otus.homework.Homework4Application
                             </mainClass>
                         </manifest>
                     </archive>
