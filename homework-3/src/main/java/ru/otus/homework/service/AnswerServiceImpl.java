@@ -21,7 +21,7 @@ public class AnswerServiceImpl implements AnswerService {
     public Integer getCorrectAnswersCount() {
         int correctCounter = 0;
         for (Question question : questionService.getAllQuestions()) {
-            question.printQuestion();
+            questionService.printQuestion(question);
             System.out.println(messageService.getMessage("answer.number"));
             if (Objects.equals(question.getCorrect(), getAnswer(scannerService.getScannerIn()))) {
                 correctCounter++;
