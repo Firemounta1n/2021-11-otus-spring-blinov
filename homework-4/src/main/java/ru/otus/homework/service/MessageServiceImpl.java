@@ -1,8 +1,24 @@
 package ru.otus.homework.service;
 
-public interface MessageServiceImpl {
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
 
-    String getMessage(String code);
+import java.util.Locale;
 
-    String getMessage(String code, Object[] args);
+@Service
+@RequiredArgsConstructor
+public class MessageServiceImpl implements MessageService {
+
+    private final MessageSource messageSource;
+
+    @Override
+    public String getMessage(String code) {
+        return messageSource.getMessage(code, null, Locale.getDefault());
+    }
+
+    @Override
+    public String getMessage(String code, Object[] args) {
+        return messageSource.getMessage(code, args, Locale.getDefault());
+    }
 }

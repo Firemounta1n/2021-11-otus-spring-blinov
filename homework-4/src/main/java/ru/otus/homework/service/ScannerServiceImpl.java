@@ -1,10 +1,19 @@
 package ru.otus.homework.service;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Scanner;
 
-public interface ScannerServiceImpl {
+@Component
+public class ScannerServiceImpl implements ScannerService {
 
-    Scanner getScannerIn();
+    @Override
+    public Scanner getScannerIn() {
+        return new Scanner(System.in);
+    }
 
-    String getScannerInNext();
+    @Override
+    public String getScannerInNext() {
+        return new Scanner(System.in).next();
+    }
 }

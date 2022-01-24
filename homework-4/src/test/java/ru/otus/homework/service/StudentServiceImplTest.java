@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
 
-    private StudentServiceImpl studentService;
+    private StudentService studentService;
 
     @Mock
     private ScannerService scannerService;

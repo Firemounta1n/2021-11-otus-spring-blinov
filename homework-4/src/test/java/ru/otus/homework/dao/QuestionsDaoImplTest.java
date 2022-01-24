@@ -16,10 +16,10 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class QuestionsDaoImplTest {
 
+    private QuestionsDao questionsDao;
+
     @Mock
     private CsvInputStreamTransformer transformer;
-
-    private QuestionsDao questionsDao;
 
     @BeforeEach
     void setUp() {

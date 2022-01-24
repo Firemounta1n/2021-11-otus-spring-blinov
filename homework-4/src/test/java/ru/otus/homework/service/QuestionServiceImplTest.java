@@ -18,13 +18,13 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 class QuestionServiceImplTest {
 
+    private QuestionService questionService;
+
     @Mock
     private QuestionsDao dao;
 
     @Mock
     private MessageService messageService;
-
-    private QuestionServiceImpl questionService;
 
     @BeforeEach
     void setUp() {

@@ -12,6 +12,8 @@ import ru.otus.homework.domain.Student;
 @ExtendWith(MockitoExtension.class)
 class ExamServiceImplTest {
 
+    private ExamService examService;
+
     @Mock
     private AnswerService answerService;
 
@@ -20,8 +22,6 @@ class ExamServiceImplTest {
 
     @Mock
     private MessageService messageService;
-
-    private ExamService examService;
 
     @BeforeEach
     void setUp() {

@@ -1,6 +1,38 @@
 package ru.otus.homework.service;
 
-public interface LocaleServiceImpl {
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-    void selectLocale();
+import java.util.Locale;
+
+@Service
+@RequiredArgsConstructor
+public class LocaleServiceImpl implements LocaleService {
+
+    private final ScannerService scannerService;
+
+    private final MessageService messageService;
+
+    @Override
+    public void selectLocale() {
+        if (getLanguage() == 2) {
+            Locale.setDefault(Locale.forLanguageTag("ru-RU"));
+        } else {
+            Locale.setDefault(Locale.forLanguageTag("und"));
+        }
+    }
+
+    private Integer getLanguage() {
+        System.out.println(messageService.getMessage("language.selector") + " ");
+        try {
+            int selectedLanguage = Integer.parseInt(scannerService.getScannerInNext());
+            if (!(selectedLanguage == 1 || selectedLanguage == 2)) {
+                throw new NumberFormatException();
+            }
+            return selectedLanguage;
+        } catch (NumberFormatException e) {
+            System.out.println(messageService.getMessage("language.selector.error"));
+            return getLanguage();
+        }
+    }
 }

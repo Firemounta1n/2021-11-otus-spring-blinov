@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AnswerServiceImplTest {
 
-    private AnswerServiceImpl answerService;
+    private AnswerService answerService;
 
     @Mock
     private QuestionService questionService;
