@@ -13,9 +13,6 @@ import ru.otus.homework.domain.Student;
 class ExamServiceImplTest {
 
     @Mock
-    private LocaleService localeService;
-
-    @Mock
     private AnswerService answerService;
 
     @Mock
@@ -28,7 +25,7 @@ class ExamServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        examService = new ExamServiceImpl(localeService, studentService, answerService, messageService);
+        examService = new ExamServiceImpl(studentService, answerService, messageService);
 
         Student student = Student.builder()
                 .firstName("Ivan")

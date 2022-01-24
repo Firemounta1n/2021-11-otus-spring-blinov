@@ -6,5 +6,7 @@ public interface StudentService {
 
     void createStudent();
 
+    void cleanStudent();
+
     Student getStudent();
 }

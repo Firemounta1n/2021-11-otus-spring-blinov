@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ExamServiceImpl implements ExamService {
 
-    private final LocaleService localeService;
-
     private final StudentService studentService;
 
     private final AnswerService answerService;
@@ -17,8 +15,6 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public boolean makeExam() {
-        localeService.selectLocale();
-        studentService.createStudent();
         if (answerService.getCorrectAnswersCount() > 3) {
             System.out.println(messageService.getMessage(
                     "exam.complete.success",

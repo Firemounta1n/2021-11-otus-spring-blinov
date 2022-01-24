@@ -1,7 +1,6 @@
 package ru.otus.homework.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
@@ -12,7 +11,7 @@ public class LocaleService implements LocaleServiceImpl {
 
     private final ScannerService scannerService;
 
-    private final MessageSource messageSource;
+    private final MessageService messageService;
 
     @Override
     public void selectLocale() {
@@ -24,8 +23,7 @@ public class LocaleService implements LocaleServiceImpl {
     }
 
     private Integer getLanguage() {
-        System.out.println(messageSource.getMessage("language.selector", null,
-                Locale.forLanguageTag("und")) + " ");
+        System.out.println(messageService.getMessage("language.selector") + " ");
         try {
             int selectedLanguage = Integer.parseInt(scannerService.getScannerInNext());
             if (!(selectedLanguage == 1 || selectedLanguage == 2)) {
@@ -33,8 +31,7 @@ public class LocaleService implements LocaleServiceImpl {
             }
             return selectedLanguage;
         } catch (NumberFormatException e) {
-            System.out.println(messageSource.getMessage("language.selector.error", null,
-                    Locale.forLanguageTag("und")));
+            System.out.println(messageService.getMessage("language.selector.error"));
             return getLanguage();
         }
     }

@@ -26,6 +26,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public void cleanStudent() {
+        this.student = null;
+    }
+
+    @Override
     public Student getStudent() {
         return this.student;
     }
