@@ -4,9 +4,9 @@ import ru.otus.homework.domain.Student;
 
 public interface StudentService {
 
-    void createStudent();
+    String createStudent();
 
-    void cleanStudent();
+    String cleanStudent();
 
     Student getStudent();
 }

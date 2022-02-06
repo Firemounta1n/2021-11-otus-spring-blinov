@@ -9,6 +9,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.homework.domain.Student;
 
+import static org.mockito.ArgumentMatchers.any;
+
 @ExtendWith(MockitoExtension.class)
 class ExamServiceImplTest {
 
@@ -37,13 +39,15 @@ class ExamServiceImplTest {
 
     @Test
     void makeExamSuccessTest() {
+        Mockito.when(messageService.getMessage(any(), any())).thenReturn("Congratulations {0} {1}, You passed the test!");
         Mockito.when(answerService.getCorrectAnswersCount()).thenReturn(4);
-        Assertions.assertTrue(examService.makeExam());
+        Assertions.assertEquals("Congratulations {0} {1}, You passed the test!", examService.makeExam());
     }
 
     @Test
     void makeExamFailedTest() {
+        Mockito.when(messageService.getMessage(any(), any())).thenReturn("Sorry {0} {1}, You didn't pass the test.");
         Mockito.when(answerService.getCorrectAnswersCount()).thenReturn(1);
-        Assertions.assertFalse(examService.makeExam());
+        Assertions.assertEquals("Sorry {0} {1}, You didn't pass the test.", examService.makeExam());
     }
 }

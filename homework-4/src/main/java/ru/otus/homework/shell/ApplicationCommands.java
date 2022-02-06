@@ -23,25 +23,25 @@ public class ApplicationCommands {
     private final ExamService examService;
 
     @ShellMethod(value = "Change locale", key = {"le", "locale"})
-    public void locale() {
-        localeService.selectLocale();
+    public String locale() {
+        return localeService.selectLocale();
     }
 
     @ShellMethod(value = "Login student", key = {"ln", "login"})
-    public void login() {
-        studentService.createStudent();
+    public String login() {
+        return studentService.createStudent();
     }
 
     @ShellMethod(value = "Logout", key = {"lt", "logout"})
     @ShellMethodAvailability(value = "isStudentLogin")
-    public void logout() {
-        studentService.cleanStudent();
+    public String logout() {
+        return studentService.cleanStudent();
     }
 
     @ShellMethod(value = "Make exam", key = {"e", "exam"})
     @ShellMethodAvailability(value = "isStudentLogin")
-    public void exam() {
-        examService.makeExam();
+    public String exam() {
+        return examService.makeExam();
     }
 
     private Availability isStudentLogin() {

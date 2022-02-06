@@ -14,21 +14,14 @@ public class ExamServiceImpl implements ExamService {
     private final MessageService messageService;
 
     @Override
-    public boolean makeExam() {
+    public String makeExam() {
+        String[] studentFullName = new String[]{
+                studentService.getStudent().getLastName(),
+                studentService.getStudent().getFirstName()};
         if (answerService.getCorrectAnswersCount() > 3) {
-            System.out.println(messageService.getMessage(
-                    "exam.complete.success",
-                    new String[]{
-                            studentService.getStudent().getLastName(),
-                            studentService.getStudent().getFirstName()}));
-            return true;
+            return messageService.getMessage("exam.complete.success", studentFullName);
         } else {
-            System.out.println(messageService.getMessage(
-                    "exam.complete.fail",
-                    new String[]{
-                            studentService.getStudent().getLastName(),
-                            studentService.getStudent().getFirstName()}));
-            return false;
+            return messageService.getMessage("exam.complete.fail", studentFullName);
         }
     }
 }

@@ -14,16 +14,17 @@ public class LocaleServiceImpl implements LocaleService {
     private final MessageService messageService;
 
     @Override
-    public void selectLocale() {
+    public String selectLocale() {
         if (getLanguage() == 2) {
             Locale.setDefault(Locale.forLanguageTag("ru-RU"));
         } else {
             Locale.setDefault(Locale.forLanguageTag("und"));
         }
+        return messageService.getMessage("language.selected");
     }
 
     private Integer getLanguage() {
-        System.out.println(messageService.getMessage("language.selector") + " ");
+        System.out.println(messageService.getMessage("language.selector"));
         try {
             int selectedLanguage = Integer.parseInt(scannerService.getScannerInNext());
             if (!(selectedLanguage == 1 || selectedLanguage == 2)) {

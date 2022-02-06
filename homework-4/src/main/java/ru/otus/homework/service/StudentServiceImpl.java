@@ -15,19 +15,23 @@ public class StudentServiceImpl implements StudentService {
     private final MessageService messageService;
 
     @Override
-    public void createStudent() {
+    public String createStudent() {
+        if (student != null) {
+            return messageService.getMessage("student.available");
+        }
         System.out.print(messageService.getMessage("student.lastname") + " ");
         String lastName = scannerService.getScannerInNext();
         System.out.print(messageService.getMessage("student.firstname") + " ");
         String firstName = scannerService.getScannerInNext();
-        System.out.println(messageService.getMessage("student.greetings",
-                new String[] {lastName, firstName}));
         student = new Student(firstName, lastName);
+        return messageService.getMessage("student.greetings",
+                new String[] {lastName, firstName});
     }
 
     @Override
-    public void cleanStudent() {
+    public String cleanStudent() {
         this.student = null;
+        return messageService.getMessage("student.logout");
     }
 
     @Override
