@@ -46,6 +46,8 @@ public class ApplicationCommandsTest {
         System.out.println(res);
         assertThat(res).isEqualTo(String.format(GREETING_PATTERN, DEFAULT_LASTNAME, DEFAULT_FIRSTNAME));
 
+        shell.evaluate(() -> COMMAND_LOGOUT);
+
         when(scannerService.getScannerInNext()).thenReturn(DEFAULT_LASTNAME).thenReturn(DEFAULT_FIRSTNAME);
 
         String res2 = (String) shell.evaluate(() -> COMMAND_LOGIN_SHORT);
