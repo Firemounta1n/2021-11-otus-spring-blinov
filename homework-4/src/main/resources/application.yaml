@@ -1,0 +1,11 @@
+#Path to csv file
+csv:
+  path:
+    en: 'questions.csv'
+    ru: 'questions_RU.csv'
+
+spring:
+  messages:
+    basename: 'i18n/messages'
+  main:
+    allow-circular-references: true
