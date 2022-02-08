@@ -1,0 +1,16 @@
+spring:
+  shell:
+    interactive:
+      enabled: true
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:h2:mem:library
+    #initialization-mode: always
+    #data: data.sql
+    driverClassName: org.h2.Driver
+  sql:
+    init:
+      mode: always
+      data-locations: data.sql
+      schema-locations: schema.sql
