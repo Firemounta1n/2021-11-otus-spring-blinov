@@ -4,6 +4,8 @@ public interface BookService {
 
     String addNewBook();
 
+    String getAllBooks();
+
     String getBooksByTitle();
 
     String getBooksByAuthorFio();
@@ -13,6 +15,4 @@ public interface BookService {
     String updateBook();
 
     String deleteBook();
-
-    String getAllBooks();
 }
