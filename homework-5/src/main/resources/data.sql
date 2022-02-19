@@ -1,0 +1,3 @@
+INSERT INTO BOOK (`TITLE`) VALUES ('Voina i mir');
+INSERT INTO AUTHOR (BOOK_ID, `FIO`) VALUES (1, 'L.N. Tolstoy');
+INSERT INTO GENRE (BOOK_ID, `NAME`) VALUES (1, 'Epic novel');
