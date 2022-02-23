@@ -1,14 +1,15 @@
 package ru.otus.homework.repositories;
 
 import lombok.val;
-import org.springframework.stereotype.Repository;
-import ru.otus.homework.models.Book;
+import org.springframework.stereotype.Component;
+import ru.otus.homework.entities.Genre;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
-@Repository
+@Component
 public class GenreRepositoryJpa implements GenreRepository {
 
     @PersistenceContext
@@ -19,13 +20,38 @@ public class GenreRepositoryJpa implements GenreRepository {
     }
 
     @Override
-    public List<Book> findBookByGenreName(String name) {
-        val query = em.createQuery("select b " +
-                        "from Book b " +
-                        "join Genre g on g.id = b.id " +
+    public Genre save(Genre genre) {
+        if (genre.getId() == null || genre.getId() <= 0) {
+            em.persist(genre);
+            return genre;
+        } else {
+            return em.merge(genre);
+        }
+    }
+
+    @Override
+    public Optional<Genre> findById(long id) {
+        return Optional.ofNullable(em.find(Genre.class, id));
+    }
+
+    @Override
+    public List<Genre> findAll() {
+        return em.createQuery("select g from Genre g", Genre.class).getResultList();
+    }
+
+    @Override
+    public Genre findByName(String name) {
+        val query = em.createQuery("select g " +
+                        "from Genre g " +
                         "where g.name = :name",
-                Book.class);
+                Genre.class);
         query.setParameter("name", name);
-        return query.getResultList();
+        return query.getSingleResult();
+    }
+
+    @Override
+    public void deleteById(long id) {
+        val genre = em.find(Genre.class, id);
+        Optional.ofNullable(genre).ifPresent(em::remove);
     }
 }

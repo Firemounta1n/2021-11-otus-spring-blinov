@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
-import ru.otus.homework.models.Author;
-import ru.otus.homework.models.Book;
-import ru.otus.homework.models.Comment;
-import ru.otus.homework.models.Genre;
+import ru.otus.homework.entities.Author;
+import ru.otus.homework.entities.Book;
+import ru.otus.homework.entities.Comment;
+import ru.otus.homework.entities.Genre;
 
 import java.util.Arrays;
 
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Import(BookRepositoryJpa.class)
 class BookRepositoryJpaTest {
 
-    private static final int EXPECTED_QUERIES_COUNT = 1;
+    private static final int EXPECTED_QUERIES_COUNT = 2;
     private static final int EXPECTED_BOOKS_COUNT = 4;
     private static final long EXISTING_BOOK_ID = 1L;
     private static final long EXISTING_AUTHOR_ID = 1L;
@@ -58,11 +57,19 @@ class BookRepositoryJpaTest {
         val expectedBook = new Book(
                 EXISTING_BOOK_ID,
                 EXISTING_BOOK_TITLE,
-                new Author(EXISTING_AUTHOR_ID, EXISTING_AUTHOR_FIO),
-                new Genre(EXISTING_GENRE_ID, EXISTING_GENRE_NAME),
+                new Author()
+                        .setId(EXISTING_AUTHOR_ID)
+                        .setFio(EXISTING_AUTHOR_FIO),
+                new Genre()
+                        .setId(EXISTING_GENRE_ID)
+                        .setName(EXISTING_GENRE_NAME),
                 Arrays.asList(
-                        new Comment(EXISTING_COMMENT_ID, EXISTING_COMMENT_TEXT),
-                        new Comment(EXISTING_COMMENT_2_ID, EXISTING_COMMENT_2_TEXT)
+                        new Comment()
+                                .setId(EXISTING_COMMENT_ID)
+                                .setText(EXISTING_COMMENT_TEXT),
+                        new Comment()
+                                .setId(EXISTING_COMMENT_2_ID)
+                                .setText(EXISTING_COMMENT_2_TEXT)
                 )
         );
 
@@ -100,18 +107,6 @@ class BookRepositoryJpaTest {
                         && b.getComments().get(1).getText().equals(EXISTING_COMMENT_2_TEXT));
     }
 
-    @DisplayName("удалять заданную книгу по ее id")
-    @Test
-    void shouldCorrectDeleteBookById() {
-        var book = bookRepositoryJpa.findById(EXISTING_BOOK_ID);
-        assertThat(book).isPresent();
-
-        bookRepositoryJpa.deleteById(EXISTING_BOOK_ID);
-
-        book = bookRepositoryJpa.findById(EXISTING_BOOK_ID);
-        assertThat(book).isNotPresent();
-    }
-
     @DisplayName("обновлять название книги по ее id")
     @Test
     void shouldCorrectUpdateBookTitleById() {
@@ -121,6 +116,17 @@ class BookRepositoryJpaTest {
 
         assertThat(actualBook).isPresent().get()
                 .matches(b -> b.getTitle().equals(EXISTING_BOOK_2_TITLE));
+    }
+
+    @DisplayName("удалять заданную книгу по ее id")
+    @Test
+    void shouldCorrectDeleteBookById() {
+        var book = bookRepositoryJpa.findById(EXISTING_BOOK_ID);
+
+        bookRepositoryJpa.deleteById(EXISTING_BOOK_ID);
+
+        book = bookRepositoryJpa.findById(EXISTING_BOOK_ID);
+        assertThat(book).isNotPresent();
     }
 
     @DisplayName("возвращать ожидаемый список книг с оптимизированным кол-вом запросов к БД")
