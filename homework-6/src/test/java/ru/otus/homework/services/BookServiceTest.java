@@ -183,16 +183,20 @@ public class BookServiceTest {
     @DisplayName("возвращать книгу с обновленным названием ")
     @Test
     void updateBookTitleTest() {
-        val expected = new Book()
-                .setTitle(SECOND_BOOK_TITLE)
+        val found = new Book()
+                .setTitle(BOOK_TITLE)
                 .setAuthor(new Author().setFio(AUTHOR_FIO))
                 .setGenre(new Genre().setName(GENRE_NAME))
                 .setComments(List.of(new Comment().setText(COMMENT_TEXT)));
 
-        when(bookRepository.updateTitleById(eq(ID_1_HOLDER), eq(SECOND_BOOK_TITLE)))
-                .thenReturn(expected);
+        val expected = found.setTitle(SECOND_BOOK_TITLE);
+
+        when(bookRepository.findById(eq(ID_1_HOLDER)))
+                .thenReturn(Optional.of(found));
 
         val actual = bookService.updateBookTitle(ID_1_HOLDER, SECOND_BOOK_TITLE);
+
+        verify(bookRepository).save(expected);
 
         assertThat(actual).isEqualTo(expected);
     }

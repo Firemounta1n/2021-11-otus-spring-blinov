@@ -12,7 +12,6 @@ import ru.otus.homework.services.BookService;
 import ru.otus.homework.services.ScannerService;
 
 import java.util.List;
-import java.util.Set;
 
 @ShellComponent
 @RequiredArgsConstructor

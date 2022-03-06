@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Import(BookRepositoryJpa.class)
 class BookRepositoryJpaTest {
 
-    private static final int EXPECTED_QUERIES_COUNT = 2;
+    private static final int EXPECTED_QUERIES_COUNT = 9;
     private static final int EXPECTED_BOOKS_COUNT = 4;
     private static final long EXISTING_BOOK_ID = 1L;
     private static final long EXISTING_AUTHOR_ID = 1L;
@@ -31,7 +31,6 @@ class BookRepositoryJpaTest {
     private static final long EXISTING_COMMENT_ID = 1L;
     private static final long EXISTING_COMMENT_2_ID = 2L;
     private static final String EXISTING_BOOK_TITLE = "Voina i mir";
-    private static final String EXISTING_BOOK_2_TITLE = "New title";
     private static final String EXISTING_AUTHOR_FIO = "L.N. Tolstoy";
     private static final String EXISTING_GENRE_NAME = "Epic novel";
     private static final String EXISTING_COMMENT_TEXT = "Good!";
@@ -105,17 +104,6 @@ class BookRepositoryJpaTest {
                 .anyMatch(b -> b.getComments().size() == 2
                         && b.getComments().get(0).getText().equals(EXISTING_COMMENT_TEXT)
                         && b.getComments().get(1).getText().equals(EXISTING_COMMENT_2_TEXT));
-    }
-
-    @DisplayName("обновлять название книги по ее id")
-    @Test
-    void shouldCorrectUpdateBookTitleById() {
-        bookRepositoryJpa.updateTitleById(EXISTING_BOOK_ID, EXISTING_BOOK_2_TITLE);
-
-        val actualBook = bookRepositoryJpa.findById(EXISTING_BOOK_ID);
-
-        assertThat(actualBook).isPresent().get()
-                .matches(b -> b.getTitle().equals(EXISTING_BOOK_2_TITLE));
     }
 
     @DisplayName("удалять заданную книгу по ее id")

@@ -40,9 +40,7 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return em.createQuery("select b from Book b " +
-                "join fetch b.author " +
-                "join fetch b.genre",
+        return em.createQuery("select b from Book b ",
                 Book.class).getResultList();
     }
 
@@ -54,14 +52,6 @@ public class BookRepositoryJpa implements BookRepository {
                 Book.class);
         query.setParameter("title", title);
         return query.getResultList();
-    }
-
-    @Override
-    public Book updateTitleById(long id, String title) {
-        val book = em.find(Book.class, id);
-        em.detach(book);
-        book.setTitle(title);
-        return em.merge(book);
     }
 
     @Override

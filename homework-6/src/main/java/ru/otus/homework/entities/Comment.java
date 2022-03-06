@@ -24,8 +24,7 @@ public class Comment {
     @Column(name = "TEXT", nullable = false)
     private String text;
 
-    @ManyToOne(targetEntity = Book.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @ManyToOne(targetEntity = Book.class, cascade = CascadeType.ALL)
     private Book book;
 
     @Override
