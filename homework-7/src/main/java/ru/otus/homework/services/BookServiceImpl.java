@@ -26,7 +26,6 @@ public class BookServiceImpl implements BookService {
     private final GenreRepository genreRepository;
 
     @Override
-    @Transactional
     public Book addNewBook(Book book) {
         return bookRepository.save(book);
     }
@@ -47,14 +46,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Set<Book> getBooksByFio(String fio) {
         Author author = authorRepository.findByFio(fio);
         return author.getBooks();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Set<Book> getBooksByGenreName(String name) {
         Genre genre = genreRepository.findByName(name);
         return genre.getBooks();
@@ -84,7 +81,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public void deleteBook(long id) {
         bookRepository.deleteById(id);
     }

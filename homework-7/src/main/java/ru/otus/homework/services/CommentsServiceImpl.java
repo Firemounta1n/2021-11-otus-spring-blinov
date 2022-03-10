@@ -25,13 +25,11 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    @Transactional
     public Comment saveComment(Comment comment) {
         return commentsRepository.save(comment);
     }
 
     @Override
-    @Transactional
     public void deleteComment(long id) {
         commentsRepository.deleteById(id);
     }
