@@ -16,15 +16,13 @@ public interface BookService {
 
     Optional<Book> getBookByTitle(String title);
 
-    List<Book> getBooksByFio(String fio);
+    Optional<Book> addCommentToBook(String title, Comment comment);
 
-    List<Book> getBooksByGenreName(String name);
-
-    Book addCommentToBook(String title, Comment comment);
-
-    Book updateBookTitle(String currentTitle, String title);
+    Optional<Book> updateBookTitle(String currentTitle, String title);
 
     void deleteCommentFromBook(String title, String commentId);
+
+    void deleteCommentByIdFromAllBooks(String id);
 
     void deleteBookByTitle(String title);
 }

@@ -41,43 +41,9 @@ class BookRepositoryTest extends AbstractRepositoryTest {
         val actualBook = bookRepository.findByTitle(EXISTING_BOOK_TITLE);
 
         assertThat(actualBook).isPresent().get()
-                .matches(b -> b.getAuthor() != null && b.getAuthor().getFio().equals(EXISTING_AUTHOR_FIO))
-                .matches(b -> b.getGenre() != null && b.getGenre().getName().equals(EXISTING_GENRE_NAME))
                 .matches(b -> b.getComments().size() == 2
                         && b.getComments().get(0).getText().equals(EXISTING_COMMENT_TEXT)
                         && b.getComments().get(1).getText().equals(EXISTING_COMMENT_3_TEXT));
-    }
-
-    @DisplayName("возвращать ожидаемые книги по жанру")
-    @Test
-    @Order(3)
-    void shouldReturnExpectedBooksByGenreName() {
-        val actualBooks = bookRepository.findByGenreName(EXISTING_GENRE_NAME);
-
-        assertThat(actualBooks).isNotEmpty().hasSize(2)
-                .anyMatch(b -> b.getTitle() != null && b.getTitle().equals(EXISTING_BOOK_TITLE))
-                .anyMatch(b -> b.getTitle() != null && b.getTitle().equals(EXISTING_BOOK_SECOND_TITLE))
-                .allMatch(b -> b.getGenre() != null && b.getGenre().getName().equals(EXISTING_GENRE_NAME))
-                .anyMatch(b -> b.getComments().size() == 2
-                        && b.getComments().get(0).getText().equals(EXISTING_COMMENT_TEXT)
-                        && b.getComments().get(1).getText().equals(EXISTING_COMMENT_3_TEXT))
-                .anyMatch(b -> b.getComments().size() == 0);
-    }
-
-    @DisplayName("возвращать ожидаемые книги по автору")
-    @Test
-    @Order(4)
-    void shouldReturnExpectedBooksByAuthorFio() {
-        val actualBooks = bookRepository.findByAuthorFio(EXISTING_AUTHOR_SECOND_FIO);
-
-        assertThat(actualBooks).isNotEmpty().hasSize(2)
-                .anyMatch(b -> b.getTitle() != null && b.getTitle().equals(EXISTING_BOOK_THIRD_TITLE))
-                .anyMatch(b -> b.getTitle() != null && b.getTitle().equals(EXISTING_BOOK_SECOND_TITLE))
-                .anyMatch(b -> b.getGenre() != null && b.getGenre().getName().equals(EXISTING_GENRE_NAME))
-                .anyMatch(b -> b.getGenre() != null && b.getGenre().getName().equals(EXISTING_GENRE_SECOND_NAME))
-                .anyMatch(b -> b.getComments().size() == 1
-                        && b.getComments().get(0).getText().equals(EXISTING_COMMENT_2_TEXT))
-                .anyMatch(b -> b.getComments().size() == 0);
     }
 
     @DisplayName("возвращать все комментарии по титулу книги")

@@ -20,7 +20,8 @@ class AuthorRepositoryTest extends AbstractRepositoryTest {
     void shouldReturnExpectedByGenreName() {
         val author = authorRepository.findByFio(EXISTING_AUTHOR_FIO);
 
-        assertThat(author.getFio()).isEqualTo(EXISTING_AUTHOR_FIO);
+        assertThat(author).isPresent().get()
+                .matches(a -> a.getFio().equals(EXISTING_AUTHOR_FIO));
     }
 
 }

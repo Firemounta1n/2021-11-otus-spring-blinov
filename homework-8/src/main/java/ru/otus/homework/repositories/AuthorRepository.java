@@ -3,7 +3,9 @@ package ru.otus.homework.repositories;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.homework.entities.Author;
 
-public interface AuthorRepository extends MongoRepository<Author, String> {
+import java.util.Optional;
 
-    Author findByFio(String fio);
+public interface AuthorRepository extends MongoRepository<Author, String>, AuthorRepositoryCustom {
+
+    Optional<Author> findByFio(String fio);
 }
