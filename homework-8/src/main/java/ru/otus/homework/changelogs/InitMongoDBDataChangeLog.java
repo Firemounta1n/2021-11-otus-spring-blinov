@@ -15,6 +15,15 @@ import ru.otus.homework.repositories.GenreRepository;
 @ChangeLog(order = "001")
 public class InitMongoDBDataChangeLog {
 
+    private Author lnTolstoy;
+    private Author lnTolstoy2;
+    private Author lnTolstoy3;
+    private Author lnTolstoy4;
+
+    private Genre epicNovel;
+    private Genre epicNovel2;
+    private Genre epicNovel3;
+
     private Comment good;
     private Comment awesome;
     private Comment bad;
@@ -23,18 +32,27 @@ public class InitMongoDBDataChangeLog {
     private Comment cool;
     private Comment cool2;
 
-    private Book book1;
-    private Book book2;
-    private Book book3;
-    private Book book4;
-    private Book book5;
-
     @ChangeSet(order = "000", id = "dropDB", author = "firemounta1n", runAlways = true)
     public void dropDB(MongoDatabase database) {
         database.drop();
     }
 
-    @ChangeSet(order = "001", id = "initComments", author = "firemounta1n", runAlways = true)
+    @ChangeSet(order = "001", id = "initAuthors", author = "firemounta1n", runAlways = true)
+    public void initAuthors(AuthorRepository repository) {
+        lnTolstoy = repository.save(new Author("L.N. Tolstoy"));
+        lnTolstoy2 = repository.save(new Author("L.N. Tolstoy 2"));
+        lnTolstoy3 = repository.save(new Author("L.N. Tolstoy 3"));
+        lnTolstoy4 = repository.save(new Author("L.N. Tolstoy 4"));
+    }
+
+    @ChangeSet(order = "002", id = "initGenres", author = "firemounta1n", runAlways = true)
+    public void initGenres(GenreRepository repository) {
+        epicNovel = repository.save(new Genre("Epic novel"));
+        epicNovel2 = repository.save(new Genre("Epic novel 2"));
+        epicNovel3 = repository.save(new Genre("Epic novel 3"));
+    }
+
+    @ChangeSet(order = "003", id = "initComments", author = "firemounta1n", runAlways = true)
     public void initComments(CommentsRepository repository) {
         good = repository.save(new Comment("Good!"));
         awesome = repository.save(new Comment("Awesome!"));
@@ -45,27 +63,12 @@ public class InitMongoDBDataChangeLog {
         cool2 = repository.save(new Comment("Cool2!"));
     }
 
-    @ChangeSet(order = "002", id = "initBooks", author = "firemounta1n", runAlways = true)
+    @ChangeSet(order = "004", id = "initBooks", author = "firemounta1n", runAlways = true)
     public void initBooks(BookRepository repository) {
-        book1 = repository.save(new Book("Voina i mir", good, norm));
-        book2 = repository.save(new Book("Voina i mir 2", cool, bad));
-        book3 = repository.save(new Book("Voina i mir 3", cool2, normal));
-        book4 = repository.save(new Book("Voina i mir 4", awesome));
-        book5 = repository.save(new Book("Voina i mir 5"));
-    }
-
-    @ChangeSet(order = "003", id = "initAuthors", author = "firemounta1n", runAlways = true)
-    public void initAuthors(AuthorRepository repository) {
-        repository.save(new Author("L.N. Tolstoy", book1));
-        repository.save(new Author("L.N. Tolstoy 2", book2));
-        repository.save(new Author("L.N. Tolstoy 3", book3));
-        repository.save(new Author("L.N. Tolstoy 4", book4, book5));
-    }
-
-    @ChangeSet(order = "004", id = "initGenres", author = "firemounta1n", runAlways = true)
-    public void initGenres(GenreRepository repository) {
-        repository.save(new Genre("Epic novel", book1, book5));
-        repository.save(new Genre("Epic novel 2", book2));
-        repository.save(new Genre("Epic novel 3", book3, book4));
+        repository.save(new Book("Voina i mir", lnTolstoy, epicNovel, good, norm));
+        repository.save(new Book("Voina i mir 2", lnTolstoy2, epicNovel2, cool, bad));
+        repository.save(new Book("Voina i mir 3", lnTolstoy3, epicNovel3, cool2, normal));
+        repository.save(new Book("Voina i mir 4", lnTolstoy4, epicNovel3, awesome));
+        repository.save(new Book("Voina i mir 5", lnTolstoy4, epicNovel));
     }
 }

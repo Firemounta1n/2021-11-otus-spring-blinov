@@ -74,13 +74,13 @@ public class CommentsServiceTest {
 
         val actual = commentsService.getCommentById(ID_1_HOLDER);
 
-        assertThat(actual).isEqualTo(Optional.of(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("вызывать метод удаления комментария ")
     @Test
     void deleteCommentTest() {
-        commentsService.deleteCommentById(ID_1_HOLDER);
+        commentsService.deleteComment(ID_1_HOLDER);
 
         verify(commentsRepository, times(1))
                 .deleteById(eq(ID_1_HOLDER));

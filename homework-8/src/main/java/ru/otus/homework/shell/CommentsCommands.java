@@ -37,4 +37,12 @@ public class CommentsCommands {
         return "Комментарий обновлен:" + System.lineSeparator() + commentsService.saveComment(
                 new Comment().setId(id).setText(text));
     }
+
+    @ShellMethod(value = "Delete comment by id", key = {"delc", "delete_comment"})
+    public String deleteCommentById() {
+        System.out.println("Введите id комментария для удаления");
+        val id = scannerService.getScannerInNext();
+        commentsService.deleteComment(id);
+        return "Комментарий c id = " + id + " удален";
+    }
 }

@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import ru.otus.homework.entities.Author;
 import ru.otus.homework.entities.Book;
 import ru.otus.homework.entities.Comment;
-import ru.otus.homework.services.AuthorService;
+import ru.otus.homework.entities.Genre;
 import ru.otus.homework.services.BookService;
-import ru.otus.homework.services.GenreService;
 import ru.otus.homework.services.ScannerService;
 
 @ShellComponent
@@ -16,8 +16,6 @@ import ru.otus.homework.services.ScannerService;
 public class BookCommands {
 
     private final BookService bookService;
-    private final AuthorService authorService;
-    private final GenreService genreService;
 
     private final ScannerService scannerService;
 
@@ -33,13 +31,8 @@ public class BookCommands {
         val comment = scannerService.getScannerInNext();
 
         val book = bookService.addNewBook(
-                new Book(title, new Comment(comment)));
-
-        val author = authorService.findAndAddBookElseCreateNewAuthor(fio, book);
-
-        val genre = genreService.findAndAddBookElseCreateNewGenre(genreName, book);
-
-        return "Книга '" + book.getTitle() + "' Автор - " + author.getFio() + " Жанр - " + genre.getName() + " добавлена в библиотеку";
+                new Book(title, new Author(fio), new Genre(genreName), new Comment(comment)));
+        return "Книга '" + book.getTitle() + "' добавлена в библиотеку";
     }
 
     @ShellMethod(value = "Show all books", key = {"sb", "show_books"})
@@ -54,13 +47,36 @@ public class BookCommands {
         return "Книга по названию :" + System.lineSeparator() + bookService.getBookByTitle(bookTitle);
     }
 
-    @ShellMethod(value = "Update book Title by Title", key = {"updt", "update_book_title"})
+    @ShellMethod(value = "Get books by author", key = {"ga", "get_by_author"})
+    public String getBooksByAuthor() {
+        System.out.println("Введите автора книги");
+        val fio = scannerService.getScannerInNext();
+        return "Список книг по автору :" + System.lineSeparator() + bookService.getBooksByFio(fio);
+    }
+
+    @ShellMethod(value = "Get books by genre", key = {"gg", "get_by_genre"})
+    public String getBooksByGenre() {
+        System.out.println("Введите жанр книги");
+        val genreName = scannerService.getScannerInNext();
+        return "Список книг по жанру :" + System.lineSeparator() + bookService.getBooksByGenreName(genreName);
+    }
+
+    @ShellMethod(value = "Update book title by title", key = {"updt", "update_book_title"})
     public String updateBookTitleById() {
         System.out.println("Введите название книги для которой требуется обновление");
         val bookTitle = scannerService.getScannerInNext();
         System.out.println("Введите новое название книги");
         val newBookTitle = scannerService.getScannerInNext();
         return "Книга обновлена :" + System.lineSeparator() + bookService.updateBookTitle(bookTitle, newBookTitle);
+    }
+
+    @ShellMethod(value = "Update books author fio by fio", key = {"upda", "update_books_author_fio"})
+    public String updateBooksAuthorFio() {
+        System.out.println("Введите ФИО автора которое требуется обновить");
+        val authorFio = scannerService.getScannerInNext();
+        System.out.println("Введите новое ФИО автора");
+        val newAuthorFio = scannerService.getScannerInNext();
+        return "ФИО автора обновлено :" + System.lineSeparator() + bookService.updateBooksAuthorFio(authorFio, newAuthorFio);
     }
 
     @ShellMethod(value = "Add new comment book", key = {"ac", "add_comment"})
@@ -76,27 +92,9 @@ public class BookCommands {
     @ShellMethod(value = "Delete book by Title", key = {"delb", "delete_book"})
     public String deleteBookById() {
         System.out.println("Введите название книги для удаления");
-        val tittle = scannerService.getScannerInNext();
-        bookService.deleteBookByTitle(tittle);
-        return "Книга c названием - " + tittle + " удалена";
-    }
-
-    @ShellMethod(value = "Delete comment from book", key = {"delcb", "delete_comment_from_book"})
-    public String deleteCommentFromBook() {
-        System.out.println("Введите название книги для удаления");
-        val title = scannerService.getScannerInNext();
-        System.out.println("Введите id комментария для удаления");
-        val commentId = scannerService.getScannerInNext();
-        bookService.deleteCommentFromBook(title, commentId);
-        return "Комментарий c id = " + commentId + " удален из книги";
-    }
-
-    @ShellMethod(value = "Delete comment by id from all books", key = {"delc", "delete_comment"})
-    public String deleteCommentByIdFromAllBooks() {
-        System.out.println("Введите id комментария для удаления");
         val id = scannerService.getScannerInNext();
-        bookService.deleteCommentByIdFromAllBooks(id);
-        return "Комментарий c id = " + id + " удален из всех книг";
+        bookService.deleteBookByTitle(id);
+        return "Книга c id = " + id + " удалена";
     }
 
 }

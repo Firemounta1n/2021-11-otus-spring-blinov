@@ -20,8 +20,7 @@ class GenreRepositoryTest extends AbstractRepositoryTest {
     void shouldReturnExpectedByGenreName() {
         val genre = genreRepository.findByName(EXISTING_GENRE_NAME);
 
-        assertThat(genre).isPresent().get()
-                .matches(g -> g.getName().equals(EXISTING_GENRE_NAME));
+        assertThat(genre.getName()).isEqualTo(EXISTING_GENRE_NAME);
     }
 
 }

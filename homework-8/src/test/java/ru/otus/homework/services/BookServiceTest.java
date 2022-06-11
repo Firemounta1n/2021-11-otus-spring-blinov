@@ -9,8 +9,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.homework.entities.Comment;
+import ru.otus.homework.repositories.AuthorRepository;
 import ru.otus.homework.repositories.BookRepository;
+import ru.otus.homework.entities.Author;
 import ru.otus.homework.entities.Book;
+import ru.otus.homework.entities.Genre;
+import ru.otus.homework.repositories.CommentsRepository;
+import ru.otus.homework.repositories.GenreRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +31,10 @@ public class BookServiceTest {
     private static final String ID_1_HOLDER = "1";
     private static final String BOOK_TITLE = "Voina i mir";
     private static final String SECOND_BOOK_TITLE = "Sun";
+    private static final String AUTHOR_FIO = "L.N. Tolstoy";
+    private static final String SECOND_AUTHOR_FIO = "A.E. Kukushkin";
+    private static final String GENRE_NAME = "Epic novel";
+    private static final String SECOND_GENRE_NAME = "Fantastic";
     private static final String COMMENT_TEXT = "Good!";
     private static final String SECOND_COMMENT_TEXT = "Bad!";
 
@@ -35,17 +44,17 @@ public class BookServiceTest {
     private BookRepository bookRepository;
 
     @Mock
-    private CommentsService commentsService;
+    private AuthorRepository authorRepository;
 
     @Mock
-    private AuthorService authorService;
+    private GenreRepository genreRepository;
 
     @Mock
-    private GenreService genreService;
+    private CommentsRepository commentsRepository;
 
     @BeforeEach
     void setUp() {
-        bookService = new BookServiceImpl(bookRepository, commentsService, authorService, genreService);
+        bookService = new BookServiceImpl(bookRepository, authorRepository, genreRepository, commentsRepository);
     }
 
     @DisplayName("возвращать добавленную книгу ")
@@ -53,6 +62,8 @@ public class BookServiceTest {
     void addBookTest() {
         val expected = new Book()
                 .setTitle(BOOK_TITLE)
+                .setAuthor(new Author().setFio(AUTHOR_FIO))
+                .setGenre(new Genre().setName(GENRE_NAME))
                 .setComments(List.of(new Comment().setText(COMMENT_TEXT)));
 
         when(bookRepository.save(expected)).thenReturn(expected);
@@ -68,9 +79,13 @@ public class BookServiceTest {
         val expected = Lists.list(
                 new Book()
                         .setTitle(BOOK_TITLE)
+                        .setAuthor(new Author().setFio(AUTHOR_FIO))
+                        .setGenre(new Genre().setName(GENRE_NAME))
                         .setComments(List.of(new Comment().setText(COMMENT_TEXT))),
                 new Book()
                         .setTitle(SECOND_BOOK_TITLE)
+                        .setAuthor(new Author().setFio(SECOND_AUTHOR_FIO))
+                        .setGenre(new Genre().setName(SECOND_GENRE_NAME))
                         .setComments(List.of(new Comment().setText(SECOND_COMMENT_TEXT)))
         );
 
@@ -88,6 +103,8 @@ public class BookServiceTest {
         val expected = Optional.of(
                 new Book()
                         .setTitle(BOOK_TITLE)
+                        .setAuthor(new Author().setFio(AUTHOR_FIO))
+                        .setGenre(new Genre().setName(GENRE_NAME))
                         .setComments(List.of(new Comment().setText(COMMENT_TEXT)))
         );
 
@@ -116,8 +133,7 @@ public class BookServiceTest {
 
         val actual = bookService.addCommentToBook(BOOK_TITLE, newComment);
 
-        assertThat(actual).isPresent();
-        assertThat(actual.get().getComments()).isNotEmpty().hasSize(2)
+        assertThat(actual.getComments()).isNotEmpty().hasSize(2)
                 .usingRecursiveComparison().isEqualTo(expected);
     }
 
@@ -126,6 +142,8 @@ public class BookServiceTest {
     void updateBookTitleTest() {
         val found = new Book()
                 .setTitle(BOOK_TITLE)
+                .setAuthor(new Author().setFio(AUTHOR_FIO))
+                .setGenre(new Genre().setName(GENRE_NAME))
                 .setComments(List.of(new Comment().setText(COMMENT_TEXT)));
 
         val expected = found.setTitle(SECOND_BOOK_TITLE);
@@ -137,7 +155,7 @@ public class BookServiceTest {
 
         val actual = bookService.updateBookTitle(BOOK_TITLE, SECOND_BOOK_TITLE);
 
-        assertThat(actual).isPresent().get().isEqualTo(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("вызывать удаление книги")
@@ -146,6 +164,8 @@ public class BookServiceTest {
         val found = new Book()
                 .setId(ID_1_HOLDER)
                 .setTitle(BOOK_TITLE)
+                .setAuthor(new Author().setFio(AUTHOR_FIO))
+                .setGenre(new Genre().setName(GENRE_NAME))
                 .setComments(List.of(new Comment().setId("1234").setText(COMMENT_TEXT)));
 
         when(bookRepository.findByTitle(eq(BOOK_TITLE)))
@@ -153,14 +173,8 @@ public class BookServiceTest {
 
         bookService.deleteBookByTitle(BOOK_TITLE);
 
-        verify(authorService, times(1))
-                .deleteBookFromAuthor(eq(found));
-
-        verify(genreService, times(1))
-                .deleteBookFromGenre(eq(found));
-
-        verify(commentsService, times(1))
-                .deleteCommentById(eq("1234"));
+        verify(commentsRepository, times(1))
+                .deleteById(eq("1234"));
 
         verify(bookRepository, times(1))
                 .deleteById(eq(ID_1_HOLDER));

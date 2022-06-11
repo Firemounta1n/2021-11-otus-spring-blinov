@@ -6,7 +6,6 @@ import ru.otus.homework.entities.Comment;
 import ru.otus.homework.repositories.CommentsRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +19,8 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public Optional<Comment> getCommentById(String id) {
-        return commentsRepository.findById(id);
+    public Comment getCommentById(String id) {
+        return commentsRepository.findById(id).orElse(new Comment());
     }
 
     @Override
@@ -30,7 +29,7 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public void deleteCommentById(String id) {
+    public void deleteComment(String id) {
         commentsRepository.deleteById(id);
     }
 }

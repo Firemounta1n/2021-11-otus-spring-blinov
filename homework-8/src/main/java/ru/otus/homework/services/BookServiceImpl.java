@@ -2,11 +2,18 @@ package ru.otus.homework.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.otus.homework.entities.Author;
 import ru.otus.homework.entities.Book;
 import ru.otus.homework.entities.Comment;
+import ru.otus.homework.entities.Genre;
+import ru.otus.homework.repositories.AuthorRepository;
 import ru.otus.homework.repositories.BookRepository;
+import ru.otus.homework.repositories.CommentsRepository;
+import ru.otus.homework.repositories.GenreRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,17 +23,27 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
-    private final CommentsService commentsService;
-    private final AuthorService authorService;
-    private final GenreService genreService;
+    private final AuthorRepository authorRepository;
+
+    private final GenreRepository genreRepository;
+
+    private final CommentsRepository commentsRepository;
 
     @Override
     public Book addNewBook(Book book) {
+        if (book.getAuthor() != null) {
+            Author author = authorRepository.save(book.getAuthor());
+            book.setAuthor(author);
+        }
+        if (book.getGenre() != null) {
+            Genre genre = genreRepository.save(book.getGenre());
+            book.setGenre(genre);
+        }
         if (book.getComments().size() > 0) {
             List<Comment> comments = new ArrayList<>();
-            book.getComments().forEach(c -> {
-                Comment comment = commentsService.saveComment(c);
-                comments.add(comment);
+            book.getComments().forEach(comment -> {
+                Comment comment1 = commentsRepository.save(comment);
+                comments.add(comment1);
             });
             book.setComments(comments);
         }
@@ -49,58 +66,69 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> addCommentToBook(String title, Comment comment) {
-        Optional<Book> book = bookRepository.findByTitle(title);
-        book.ifPresent(b -> {
-            commentsService.saveComment(comment);
-            b.getComments().add(comment);
-            bookRepository.save(b);
-        });
-        return book;
+    public List<Book> getBooksByFio(String fio) {
+        return bookRepository.findByAuthorFio(fio);
     }
 
     @Override
-    public Optional<Book> updateBookTitle(String currentTitle, String newTitle) {
+    public List<Book> getBooksByGenreName(String name) {
+        return bookRepository.findByGenreName(name);
+    }
+
+    @Override
+    @Transactional
+    public Book addCommentToBook(String title, Comment comment) {
+        Optional<Book> book = bookRepository.findByTitle(title);
+        if (book.isPresent()) {
+            commentsRepository.save(comment);
+            book.get().getComments().add(comment);
+            bookRepository.save(book.get());
+            return book.get();
+        } else {
+            return new Book();
+        }
+    }
+
+    @Override
+    @Transactional
+    public Book updateBookTitle(String currentTitle, String title) {
         Optional<Book> book = bookRepository.findByTitle(currentTitle);
-        book.ifPresent(b -> {
-            Optional<Book> checkNewTitleExists = bookRepository.findByTitle(newTitle);
-            checkNewTitleExists.ifPresent(newG -> {
-                System.out.println("Такая книга уже существует");
-                throw new RuntimeException();
+        return book.map(b -> {
+            b.setTitle(title);
+            return bookRepository.save(b);
+        }).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public List<Book> updateBooksAuthorFio(String currentAuthorFio, String newAuthorFio) {
+        Optional<Author> author = authorRepository.findByFio(currentAuthorFio);
+        return author.map(a -> {
+            a.setFio(newAuthorFio);
+            authorRepository.save(a);
+            List<Book> foundBooks = bookRepository.findByAuthorFio(currentAuthorFio);
+            foundBooks.forEach(b -> {
+                b.getAuthor().setFio(newAuthorFio);
+                bookRepository.save(b);
             });
-            b.setTitle(newTitle);
-            bookRepository.save(b);
-            authorService.updateAuthorBook(b);
-            genreService.updateGenreBook(b);
-        });
-        return book;
+            return foundBooks;
+        }).orElse(Collections.emptyList());
     }
 
     @Override
     public void deleteCommentFromBook(String title, String commentId) {
         Optional<Book> book = bookRepository.findByTitle(title);
-        book.ifPresent(b -> {
-            Optional<Comment> comment = commentsService.getCommentById(commentId);
-            comment.ifPresent(c -> {
-                bookRepository.deleteCommentFromBook(c);
-                commentsService.deleteCommentById(commentId);
-            });
-        });
-    }
+        book.flatMap(b -> b.getComments().stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findFirst()).ifPresent(foundComment -> commentsRepository.deleteById(foundComment.getId()));
 
-    @Override
-    public void deleteCommentByIdFromAllBooks(String id) {
-        commentsService.deleteCommentById(id);
-        getAllBooks().forEach(b -> deleteCommentFromBook(b.getTitle(), id));
     }
 
     @Override
     public void deleteBookByTitle(String title) {
         Optional<Book> book = bookRepository.findByTitle(title);
         book.ifPresent(b -> {
-            b.getComments().forEach(c -> commentsService.deleteCommentById(c.getId()));
-            authorService.deleteBookFromAuthor(book.get());
-            genreService.deleteBookFromGenre(book.get());
+            b.getComments().forEach(c -> commentsRepository.deleteById(c.getId()));
             bookRepository.deleteById(b.getId());
         });
     }

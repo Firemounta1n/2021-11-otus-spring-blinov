@@ -5,7 +5,7 @@ import ru.otus.homework.entities.Author;
 
 import java.util.Optional;
 
-public interface AuthorRepository extends MongoRepository<Author, String>, AuthorRepositoryCustom {
+public interface AuthorRepository extends MongoRepository<Author, String> {
 
     Optional<Author> findByFio(String fio);
 }
