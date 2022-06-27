@@ -33,7 +33,7 @@ public class BookDto {
         return new Book()
                 .setId(id)
                 .setTitle(title)
-                .setAuthor(new Author().setFio(author.getFio()))
+                .setAuthor(author.toDomainObject())
                 .setGenre(new Genre().setName(genre.getName()))
                 .setComments(comments != null
                         ? comments.stream()
@@ -46,7 +46,7 @@ public class BookDto {
         return new BookDto(
                 book.getId(),
                 book.getTitle(),
-                new AuthorDto(book.getAuthor().getFio()),
+                new AuthorDto(book.getAuthor().getId(), book.getAuthor().getFio()),
                 new GenreDto(book.getGenre().getName()),
                 book.getComments().stream()
                         .map(Comment::getText)

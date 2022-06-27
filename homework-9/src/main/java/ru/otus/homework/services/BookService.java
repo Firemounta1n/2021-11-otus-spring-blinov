@@ -15,7 +15,7 @@ public interface BookService {
 
     List<Book> getAllBooks();
 
-    Optional<Book> getBookById(long id);
+    Optional<Book> getBookById(Long id);
 
     List<Book> getBooksByTitle(String title);
 

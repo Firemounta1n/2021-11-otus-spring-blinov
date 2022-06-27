@@ -33,25 +33,29 @@ public class BookServiceImpl implements BookService {
             if (StringUtils.hasText(editedBook.getTitle())) {
                 b.setTitle(editedBook.getTitle());
             }
-            Optional<Author> foundAuthor = authorRepository.findByFio(editedBook.getAuthor().getFio());
-            if (foundAuthor.isPresent()) {
-                b.setAuthor(foundAuthor.get());
-            } else {
-                b.getAuthor().setFio(editedBook.getAuthor().getFio());
-            }
-            Optional<Genre> foundGenre = genreRepository.findByName(editedBook.getGenre().getName());
-            if (foundGenre.isPresent()) {
-                b.setGenre(foundGenre.get());
-            } else {
-                b.getGenre().setName(editedBook.getGenre().getName());
-            }
-            return bookRepository.save(b);
+            return setBookData(editedBook, b);
         }).orElse(null);
+    }
+
+    private Book setBookData(Book editedBook, Book currentBook) {
+        Optional<Author> foundAuthor = authorRepository.findByFio(editedBook.getAuthor().getFio());
+        if (foundAuthor.isPresent()) {
+            currentBook.setAuthor(foundAuthor.get());
+        } else {
+            currentBook.getAuthor().setFio(editedBook.getAuthor().getFio());
+        }
+        Optional<Genre> foundGenre = genreRepository.findByName(editedBook.getGenre().getName());
+        if (foundGenre.isPresent()) {
+            currentBook.setGenre(foundGenre.get());
+        } else {
+            currentBook.getGenre().setName(editedBook.getGenre().getName());
+        }
+        return bookRepository.save(currentBook);
     }
 
     @Override
     public Book saveBook(Book book) {
-        return bookRepository.save(book);
+        return setBookData(book, book);
     }
 
     @Override
@@ -60,8 +64,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> getBookById(long id) {
-        return bookRepository.findById(id);
+    public Optional<Book> getBookById(Long id) {
+        return Optional.ofNullable(id).flatMap(i -> bookRepository.findById(id));
     }
 
     @Override

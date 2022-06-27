@@ -52,13 +52,13 @@
             <a th:href="@{/comments(id=${book.id})}">3</a>
         </td>
         <td>
-            <a href="editBook.html" th:href="@{/editBook(id=${book.id})}">Edit</a>
+            <a href="createOrUpdateBook.html" th:href="@{/createOrUpdateBook(id=${book.id})}">Edit</a>
             <a href="books.html" th:href="@{/deleteBook(id=${book.id})}">Delete</a>
         </td>
     </tr>
     </tbody>
 </table>
-<form class="new-book-button" method="GET" th:action="@{/createBook}">
+<form class="new-book-button" method="GET" th:action="@{/createOrUpdateBook(id=null)}">
     <button type="submit" name="submit" value="value" class="link-button">Add new book</button>
 </form>
 </body>
