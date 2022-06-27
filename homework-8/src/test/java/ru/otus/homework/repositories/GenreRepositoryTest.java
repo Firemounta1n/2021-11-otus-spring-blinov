@@ -18,7 +18,7 @@ class GenreRepositoryTest extends AbstractRepositoryTest {
     @DisplayName("возвращать жанр по его наименованию")
     @Test
     void shouldReturnExpectedByGenreName() {
-        val genre = genreRepository.findByName(EXISTING_GENRE_NAME);
+        val genre = genreRepository.findGenreByName(EXISTING_GENRE_NAME).get();
 
         assertThat(genre.getName()).isEqualTo(EXISTING_GENRE_NAME);
     }

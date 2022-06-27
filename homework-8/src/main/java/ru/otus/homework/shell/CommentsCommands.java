@@ -38,6 +38,16 @@ public class CommentsCommands {
                 new Comment().setId(id).setText(text));
     }
 
+    @ShellMethod(value = "Add new comment book", key = {"ac", "add_comment"})
+    public String addNewCommentToBook() {
+        System.out.println("Введите id книги для которой нужно добавить комментарий");
+        val id = scannerService.getScannerInNext();
+        System.out.println("Введите новый комментарий");
+        val newComment = scannerService.getScannerInNext();
+        return "Новый комментарий добавлен к книге :"
+                + System.lineSeparator() + commentsService.saveComment(new Comment(id, newComment));
+    }
+
     @ShellMethod(value = "Delete comment by id", key = {"delc", "delete_comment"})
     public String deleteCommentById() {
         System.out.println("Введите id комментария для удаления");

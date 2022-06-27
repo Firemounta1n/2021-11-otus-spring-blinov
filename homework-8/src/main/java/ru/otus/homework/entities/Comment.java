@@ -17,7 +17,10 @@ public class Comment {
     private String id;
     private String text;
 
-    public Comment(String text) {
+    private String bookId;
+
+    public Comment(String bookId, String text) {
+        this.bookId = bookId;
         this.text = text;
     }
 }

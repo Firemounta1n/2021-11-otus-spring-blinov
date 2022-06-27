@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.otus.homework.entities.Author;
-import ru.otus.homework.entities.Book;
-import ru.otus.homework.entities.Comment;
-import ru.otus.homework.entities.Genre;
+import ru.otus.homework.dto.BookDto;
 import ru.otus.homework.services.BookService;
 import ru.otus.homework.services.ScannerService;
 
@@ -24,14 +21,15 @@ public class BookCommands {
         System.out.println("Введите название книги");
         val title = scannerService.getScannerInNext();
         System.out.println("Введите автора книги");
-        val fio = scannerService.getScannerInNext();
+        val authorFio = scannerService.getScannerInNext();
         System.out.println("Введите жанр книги");
         val genreName = scannerService.getScannerInNext();
-        System.out.println("Введите комментарий к книге");
-        val comment = scannerService.getScannerInNext();
 
-        val book = bookService.addNewBook(
-                new Book(title, new Author(fio), new Genre(genreName), new Comment(comment)));
+        val book = bookService.addNewBook(new BookDto()
+                .setTitle(title)
+                .setAuthorFio(authorFio)
+                .setGenreName(genreName)
+        );
         return "Книга '" + book.getTitle() + "' добавлена в библиотеку";
     }
 
@@ -68,25 +66,6 @@ public class BookCommands {
         System.out.println("Введите новое название книги");
         val newBookTitle = scannerService.getScannerInNext();
         return "Книга обновлена :" + System.lineSeparator() + bookService.updateBookTitle(bookTitle, newBookTitle);
-    }
-
-    @ShellMethod(value = "Update books author fio by fio", key = {"upda", "update_books_author_fio"})
-    public String updateBooksAuthorFio() {
-        System.out.println("Введите ФИО автора которое требуется обновить");
-        val authorFio = scannerService.getScannerInNext();
-        System.out.println("Введите новое ФИО автора");
-        val newAuthorFio = scannerService.getScannerInNext();
-        return "ФИО автора обновлено :" + System.lineSeparator() + bookService.updateBooksAuthorFio(authorFio, newAuthorFio);
-    }
-
-    @ShellMethod(value = "Add new comment book", key = {"ac", "add_comment"})
-    public String addNewCommentToBook() {
-        System.out.println("Введите название книги для которой нужно добавить комментарий");
-        val title = scannerService.getScannerInNext();
-        System.out.println("Введите новый комментарий");
-        val newComment = scannerService.getScannerInNext();
-        return "Новый комментарий добавлен к книге :"
-                + System.lineSeparator() + bookService.addCommentToBook(title, new Comment().setText(newComment));
     }
 
     @ShellMethod(value = "Delete book by Title", key = {"delb", "delete_book"})

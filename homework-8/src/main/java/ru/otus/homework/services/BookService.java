@@ -1,32 +1,24 @@
 package ru.otus.homework.services;
 
+import ru.otus.homework.dto.BookDto;
 import ru.otus.homework.entities.Book;
-import ru.otus.homework.entities.Comment;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface BookService {
 
-    Book addNewBook(Book book);
+    Book addNewBook(BookDto bookDto);
 
-    List<Book> getAllBooks();
+    List<BookDto> getAllBooks();
 
-    Optional<Book> getBookById(String id);
+    Optional<BookDto> getBookByTitle(String title);
 
-    Optional<Book> getBookByTitle(String title);
+    List<BookDto> getBooksByFio(String fio);
 
-    List<Book> getBooksByFio(String fio);
-
-    List<Book> getBooksByGenreName(String name);
-
-    Book addCommentToBook(String title, Comment comment);
+    List<BookDto> getBooksByGenreName(String name);
 
     Book updateBookTitle(String currentTitle, String title);
-
-    List<Book> updateBooksAuthorFio(String currentFio, String newFio);
-
-    void deleteCommentFromBook(String title, String commentId);
 
     void deleteBookByTitle(String title);
 }

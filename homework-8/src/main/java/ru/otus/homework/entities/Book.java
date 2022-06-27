@@ -5,9 +5,6 @@ import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.LinkedList;
-import java.util.List;
-
 @Getter
 @Setter
 @ToString
@@ -20,14 +17,12 @@ public class Book {
     @Id
     private String id;
     private String title;
-    private Author author;
-    private Genre genre;
-    private List<Comment> comments;
+    private String authorId;
+    private String genreId;
 
-    public Book(String title, Author author, Genre genre, Comment... comments) {
+    public Book(String title, String authorId, String genreId) {
         this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.comments = new LinkedList<>(List.of(comments));
+        this.authorId = authorId;
+        this.genreId = genreId;
     }
 }

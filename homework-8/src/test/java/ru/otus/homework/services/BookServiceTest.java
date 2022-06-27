@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.homework.entities.Comment;
+import ru.otus.homework.dto.BookDto;
 import ru.otus.homework.repositories.AuthorRepository;
 import ru.otus.homework.repositories.BookRepository;
 import ru.otus.homework.entities.Author;
@@ -17,8 +17,6 @@ import ru.otus.homework.entities.Genre;
 import ru.otus.homework.repositories.CommentsRepository;
 import ru.otus.homework.repositories.GenreRepository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,15 +26,12 @@ import static org.mockito.Mockito.*;
 @DisplayName("Service для работы с книгами должен")
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
-    private static final String ID_1_HOLDER = "1";
     private static final String BOOK_TITLE = "Voina i mir";
     private static final String SECOND_BOOK_TITLE = "Sun";
     private static final String AUTHOR_FIO = "L.N. Tolstoy";
     private static final String SECOND_AUTHOR_FIO = "A.E. Kukushkin";
     private static final String GENRE_NAME = "Epic novel";
     private static final String SECOND_GENRE_NAME = "Fantastic";
-    private static final String COMMENT_TEXT = "Good!";
-    private static final String SECOND_COMMENT_TEXT = "Bad!";
 
     private BookService bookService;
 
@@ -60,15 +55,29 @@ public class BookServiceTest {
     @DisplayName("возвращать добавленную книгу ")
     @Test
     void addBookTest() {
+        val bookDto = new BookDto()
+            .setTitle(BOOK_TITLE)
+            .setAuthorFio(AUTHOR_FIO)
+            .setGenreName(GENRE_NAME);
+
+        val author = new Author()
+                .setId("123")
+                .setFio(AUTHOR_FIO);
+
+        val genre = new Genre()
+                .setId("123")
+                .setName(GENRE_NAME);
+
         val expected = new Book()
                 .setTitle(BOOK_TITLE)
-                .setAuthor(new Author().setFio(AUTHOR_FIO))
-                .setGenre(new Genre().setName(GENRE_NAME))
-                .setComments(List.of(new Comment().setText(COMMENT_TEXT)));
+                .setAuthorId(author.getId())
+                .setGenreId(genre.getId());
 
-        when(bookRepository.save(expected)).thenReturn(expected);
+        when(authorRepository.save(any())).thenReturn(author);
+        when(genreRepository.save(any())).thenReturn(genre);
+        when(bookRepository.save(any())).thenReturn(expected);
 
-        val actual = bookService.addNewBook(expected);
+        val actual = bookService.addNewBook(bookDto);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -76,21 +85,62 @@ public class BookServiceTest {
     @DisplayName("возвращать все книги ")
     @Test
     void getAllBooksTest() {
-        val expected = Lists.list(
+        val books = Lists.list(
                 new Book()
                         .setTitle(BOOK_TITLE)
-                        .setAuthor(new Author().setFio(AUTHOR_FIO))
-                        .setGenre(new Genre().setName(GENRE_NAME))
-                        .setComments(List.of(new Comment().setText(COMMENT_TEXT))),
+                        .setAuthorId("123")
+                        .setGenreId("123"),
                 new Book()
                         .setTitle(SECOND_BOOK_TITLE)
-                        .setAuthor(new Author().setFio(SECOND_AUTHOR_FIO))
-                        .setGenre(new Genre().setName(SECOND_GENRE_NAME))
-                        .setComments(List.of(new Comment().setText(SECOND_COMMENT_TEXT)))
+                        .setAuthorId("234")
+                        .setGenreId("234")
+        );
+
+        val author = Optional.of(
+                new Author()
+                        .setId("123")
+                        .setFio(AUTHOR_FIO)
+        );
+
+        val genre = Optional.of(
+                new Genre()
+                        .setId("123")
+                        .setName(GENRE_NAME)
+        );
+
+        val secondAuthor = Optional.of(
+                new Author()
+                        .setId("123")
+                        .setFio(SECOND_AUTHOR_FIO)
+        );
+
+        val secondGenre = Optional.of(
+                new Genre()
+                        .setId("123")
+                        .setName(SECOND_GENRE_NAME)
+        );
+
+        val expected = Lists.list(
+                new BookDto()
+                        .setTitle(BOOK_TITLE)
+                        .setAuthorFio(AUTHOR_FIO)
+                        .setGenreName(GENRE_NAME),
+                new BookDto()
+                        .setTitle(SECOND_BOOK_TITLE)
+                        .setAuthorFio(SECOND_AUTHOR_FIO)
+                        .setGenreName(SECOND_GENRE_NAME)
         );
 
         when(bookRepository.findAll())
-                .thenReturn(expected);
+                .thenReturn(books);
+        when(authorRepository.findById(eq("123")))
+                .thenReturn(author);
+        when(genreRepository.findById(eq("123")))
+                .thenReturn(genre);
+        when(authorRepository.findById(eq("234")))
+                .thenReturn(secondAuthor);
+        when(genreRepository.findById(eq("234")))
+                .thenReturn(secondGenre);
 
         val actual = bookService.getAllBooks();
 
@@ -100,84 +150,40 @@ public class BookServiceTest {
     @DisplayName("возвращать все книги по названию ")
     @Test
     void getBookByTitleTest() {
-        val expected = Optional.of(
+        val book = Optional.of(
                 new Book()
                         .setTitle(BOOK_TITLE)
-                        .setAuthor(new Author().setFio(AUTHOR_FIO))
-                        .setGenre(new Genre().setName(GENRE_NAME))
-                        .setComments(List.of(new Comment().setText(COMMENT_TEXT)))
+                        .setAuthorId("123")
+                        .setGenreId("123")
         );
 
-        when(bookRepository.findByTitle(eq(BOOK_TITLE)))
-                .thenReturn(expected);
+        val author = Optional.of(
+                new Author()
+                        .setId("123")
+                        .setFio(AUTHOR_FIO)
+        );
+
+        val genre = Optional.of(
+                new Genre()
+                        .setId("123")
+                        .setName(GENRE_NAME)
+        );
+
+        val expected = new BookDto()
+                .setTitle(BOOK_TITLE)
+                .setAuthorFio(AUTHOR_FIO)
+                .setGenreName(GENRE_NAME);
+
+        when(bookRepository.findBookByTitle(eq(BOOK_TITLE)))
+                .thenReturn(book);
+        when(authorRepository.findById(eq("123")))
+                .thenReturn(author);
+        when(genreRepository.findById(eq("123")))
+                .thenReturn(genre);
 
         val actual = bookService.getBookByTitle(BOOK_TITLE);
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
-    }
-
-    @DisplayName("добавлять новый комментарий к книге по id")
-    @Test
-    void shouldSaveNewCommentToBook() {
-        val book = new Book().setComments(new ArrayList<>());
-        book.getComments().add(new Comment().setText(COMMENT_TEXT));
-
-        val newComment = new Comment().setText(SECOND_COMMENT_TEXT);
-
-        val expected = Lists.list(
-                new Comment().setText(COMMENT_TEXT),
-                newComment
-        );
-
-        when(bookRepository.findByTitle(eq(BOOK_TITLE))).thenReturn(Optional.of(book));
-
-        val actual = bookService.addCommentToBook(BOOK_TITLE, newComment);
-
-        assertThat(actual.getComments()).isNotEmpty().hasSize(2)
-                .usingRecursiveComparison().isEqualTo(expected);
-    }
-
-    @DisplayName("возвращать книгу с обновленным названием ")
-    @Test
-    void updateBookTitleTest() {
-        val found = new Book()
-                .setTitle(BOOK_TITLE)
-                .setAuthor(new Author().setFio(AUTHOR_FIO))
-                .setGenre(new Genre().setName(GENRE_NAME))
-                .setComments(List.of(new Comment().setText(COMMENT_TEXT)));
-
-        val expected = found.setTitle(SECOND_BOOK_TITLE);
-
-        when(bookRepository.findByTitle(eq(BOOK_TITLE))).thenReturn(Optional.of(found));
-
-        when(bookRepository.save(eq(expected)))
-                .thenReturn(expected);
-
-        val actual = bookService.updateBookTitle(BOOK_TITLE, SECOND_BOOK_TITLE);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @DisplayName("вызывать удаление книги")
-    @Test
-    void deleteBookTest() {
-        val found = new Book()
-                .setId(ID_1_HOLDER)
-                .setTitle(BOOK_TITLE)
-                .setAuthor(new Author().setFio(AUTHOR_FIO))
-                .setGenre(new Genre().setName(GENRE_NAME))
-                .setComments(List.of(new Comment().setId("1234").setText(COMMENT_TEXT)));
-
-        when(bookRepository.findByTitle(eq(BOOK_TITLE)))
-                .thenReturn(Optional.of(found));
-
-        bookService.deleteBookByTitle(BOOK_TITLE);
-
-        verify(commentsRepository, times(1))
-                .deleteById(eq("1234"));
-
-        verify(bookRepository, times(1))
-                .deleteById(eq(ID_1_HOLDER));
+        assertThat(actual).isPresent().get().usingRecursiveComparison().isEqualTo(expected);
     }
 
 }

@@ -24,14 +24,6 @@ public class InitMongoDBDataChangeLog {
     private Genre epicNovel2;
     private Genre epicNovel3;
 
-    private Comment good;
-    private Comment awesome;
-    private Comment bad;
-    private Comment normal;
-    private Comment norm;
-    private Comment cool;
-    private Comment cool2;
-
     @ChangeSet(order = "000", id = "dropDB", author = "firemounta1n", runAlways = true)
     public void dropDB(MongoDatabase database) {
         database.drop();
@@ -52,23 +44,30 @@ public class InitMongoDBDataChangeLog {
         epicNovel3 = repository.save(new Genre("Epic novel 3"));
     }
 
-    @ChangeSet(order = "003", id = "initComments", author = "firemounta1n", runAlways = true)
-    public void initComments(CommentsRepository repository) {
-        good = repository.save(new Comment("Good!"));
-        awesome = repository.save(new Comment("Awesome!"));
-        bad = repository.save(new Comment("Bad!"));
-        normal = repository.save(new Comment("Normal"));
-        norm = repository.save(new Comment("Norm"));
-        cool = repository.save(new Comment("Cool!"));
-        cool2 = repository.save(new Comment("Cool2!"));
+    @ChangeSet(order = "003", id = "initBooks", author = "firemounta1n", runAlways = true)
+    public void initBooks(BookRepository repository) {
+        repository.save(new Book("Voina i mir", lnTolstoy.getId(), epicNovel.getId()));
+        repository.save(new Book("Voina i mir 2", lnTolstoy2.getId(), epicNovel2.getId()));
+        repository.save(new Book("Voina i mir 3", lnTolstoy3.getId(), epicNovel3.getId()));
+        repository.save(new Book("Voina i mir 4", lnTolstoy4.getId(), epicNovel3.getId()));
+        repository.save(new Book("Voina i mir 5", lnTolstoy4.getId(), epicNovel.getId()));
     }
 
-    @ChangeSet(order = "004", id = "initBooks", author = "firemounta1n", runAlways = true)
-    public void initBooks(BookRepository repository) {
-        repository.save(new Book("Voina i mir", lnTolstoy, epicNovel, good, norm));
-        repository.save(new Book("Voina i mir 2", lnTolstoy2, epicNovel2, cool, bad));
-        repository.save(new Book("Voina i mir 3", lnTolstoy3, epicNovel3, cool2, normal));
-        repository.save(new Book("Voina i mir 4", lnTolstoy4, epicNovel3, awesome));
-        repository.save(new Book("Voina i mir 5", lnTolstoy4, epicNovel));
+    @ChangeSet(order = "004", id = "initComments", author = "firemounta1n", runAlways = true)
+    public void initComments(BookRepository bookRepository, CommentsRepository repository) {
+        bookRepository.findBookByTitle("Voina i mir").ifPresent(book -> {
+            repository.save(new Comment(book.getId(),"Good!"));
+            repository.save(new Comment(book.getId(), "Norm"));
+        });
+        bookRepository.findBookByTitle("Voina i mir 2").ifPresent(book -> {
+            repository.save(new Comment(book.getId(), "Cool!"));
+            repository.save(new Comment(book.getId(), "Bad!"));
+        });
+        bookRepository.findBookByTitle("Voina i mir 3").ifPresent(book -> {
+            repository.save(new Comment(book.getId(),"Cool2!"));
+            repository.save(new Comment(book.getId(),"Normal"));
+        });
+        bookRepository.findBookByTitle("Voina i mir 4")
+                .ifPresent(book -> repository.save(new Comment(book.getId(), "Awesome!")));
     }
 }
