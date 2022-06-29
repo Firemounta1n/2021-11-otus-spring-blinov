@@ -1,0 +1,21 @@
+spring:
+  main:
+    allow-circular-references: true
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: library
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.homework.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+logging:
+  level:
+    root: ERROR
