@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            width: 1000px;
+            border-collapse: collapse;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        .new-book-button {
+            padding: 50px;
+        }
+
+        .action-button {
+            padding: 20px;
+        }
+
+    </style>
+    <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <script src="js/library.js"></script>
+</head>
+
+<body>
+
+<span id="bookList">
+    <h1>Books:</h1>
+
+    <table class="books" id="books">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <div class="new-book-button">
+        <button type="button" onclick="showEditor()">Add New Book</button>
+    </div>
+</span>
+
+<span id="bookEditor" hidden="hidden">
+    <h3>Book Info:</h3>
+
+    <div class="row" hidden="hidden">
+        <label for="bookId">ID:</label>
+        <input id="bookId" type="text" readonly="readonly"/>
+    </div>
+
+    <div class="row">
+        <label for="bookTitle">Title:</label>
+        <input id="bookTitle" name="title" type="text"/>
+    </div>
+
+    <div class="row">
+        <label for="bookAuthorId">Author:</label>
+        <select class="form-control" id="bookAuthorId"></select>
+    </div>
+
+    <div class="row">
+        <label for="bookGenreId">Genre:</label>
+        <select class="form-control" id="bookGenreId"></select>
+    </div>
+
+    <div class="action-button">
+        <button type="button" onclick="showList()">Go back</button>
+        <button type="button" onclick="saveBook()">Save book</button>
+    </div>
+</span>
+
+<script>
+    $(document).ready(loadBooks());
+</script>
+
+</body>
+</html>
